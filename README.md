@@ -23,7 +23,7 @@ of this audience browses on mid-range Android phones over cell data.
 
 ```sh
 npm install
-npm run dev      # localhost:4321/tactaxes-website/
+npm run dev      # localhost:4321
 npm run build    # -> dist/
 npm run preview  # serve dist/ locally
 ```
@@ -52,32 +52,53 @@ belong in `public/images/`.
 
 ## Deploying
 
-The workflow builds on push to `main`. Base path and canonical host come from env vars —
-**never hardcode them**, a wrong base path silently breaks every asset and link.
+Push to `main` → GitHub Actions builds and publishes to GitHub Pages at
+**https://tactaxes.com**. The domain is pinned by `public/CNAME`; the workflow sets
+`SITE_URL` and `BASE_PATH` to match. Those three must always agree — if they drift,
+canonical URLs, hreflang and the sitemap point at a host that isn't serving the site.
 
-**Preview (current default)**
+The build fails deliberately if `dist/CNAME` is missing. Astro wipes `dist/` on every
+build, and a missing CNAME makes Pages silently drop the custom domain and fall back
+to `*.github.io` — a failure that looks like DNS and wastes hours.
+
+For a one-off preview build against the project URL:
+
+```sh
+SITE_URL=https://devto1010.github.io BASE_PATH=/tactaxes-website npm run build
 ```
-SITE_URL=https://<owner>.github.io
-BASE_PATH=/tactaxes-website
-```
 
-**Production, after DNS cutover**
-```
-SITE_URL=https://tactaxes.com
-BASE_PATH=/
-```
-…and add `public/CNAME` containing `tactaxes.com`.
+### DNS
 
-### ⚠️ Before touching DNS
+DNS is at GoDaddy (`ns49/ns50.domaincontrol.com`) and **stays there**. Only the web
+records change:
 
-`tactaxes.com` is **live today**, and the client's staff email runs on that domain
-(`nini.b@tactaxes.com` appears on a business card in their own marketing photos).
+| Type | Name | Value |
+|---|---|---|
+| A | `@` | `185.199.108.153` `.109` `.110` `.111` |
+| AAAA | `@` | `2606:50c0:8000::153` … `8003::153` |
+| CNAME | `www` | `devto1010.github.io.` |
 
-1. Get the current DNS zone file before changing anything.
-2. **Carry the MX records across.** If the nameservers move without them, staff email
-   goes dark — that takes out the business's inbox, not just its website.
-3. Ship to the `github.io` preview URL and get client sign-off first.
-4. Cut DNS only when they're ready for the old site to disappear.
+**Everything else in the zone must survive untouched.** The domain carries a live
+Microsoft 365 tenant (MX, `autodiscover`, `enterpriseregistration`,
+`enterpriseenrollment`, SPF, MS verification TXT), Mailgun on the `reply` subdomain,
+Keap/Infusionsoft (`nfh*`), DMARC and Google site verification. None of it conflicts
+with the web records.
+
+GitHub Pages was chosen over Cloudflare Pages specifically because it publishes real
+A records. A CNAME cannot exist at a zone apex, and GoDaddy has no ALIAS/ANAME
+flattening — so Cloudflare would have required migrating nameservers and hand-copying
+that entire M365 configuration. Not worth the risk to save a redirect.
+
+**Turn GoDaddy Forwarding off before editing DNS.** The old apex A records
+(`15.197.225.128`, `3.33.251.168`) are the Forwarding service, not hand-entered
+records. Leave it on and GoDaddy re-adds them.
+
+### History
+
+`tactaxes.com` used to forward to `taxhelplouisville.com`, a Pressable-hosted site the
+client lost access to. That host now returns 404 behind a mismatched TLS certificate,
+so the domain on all their signage was serving a browser security warning. This site
+replaces it, and `tactaxes.com` becomes canonical rather than redirecting away.
 
 ## Open questions — blocking
 

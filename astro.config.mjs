@@ -5,19 +5,18 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 /**
- * Deploy targets
- * --------------
- * GitHub Pages project site (preview, default):
- *   SITE_URL=https://<user>.github.io  BASE_PATH=/tactaxes-website
+ * Production is the custom domain tactaxes.com on GitHub Pages, pinned by
+ * public/CNAME. The site sits at the domain root, so there is no base path —
+ * which keeps local dev and production identical.
  *
- * Custom domain (production, after DNS cutover):
- *   SITE_URL=https://tactaxes.com      BASE_PATH=/
+ * Both are overridable for a one-off preview build against the project URL:
+ *   SITE_URL=https://devto1010.github.io BASE_PATH=/tactaxes-website npm run build
  *
- * The deploy workflow sets these. Never hardcode — a wrong base path silently
- * breaks every asset and internal link on the deployed site.
+ * Never hardcode a base path — a wrong one silently breaks every asset and
+ * internal link on the deployed site.
  */
-const SITE_URL = process.env.SITE_URL ?? 'https://devto1010.github.io';
-const BASE_PATH = process.env.BASE_PATH ?? '/tactaxes-website';
+const SITE_URL = process.env.SITE_URL ?? 'https://tactaxes.com';
+const BASE_PATH = process.env.BASE_PATH ?? '/';
 
 // https://astro.build/config
 export default defineConfig({
