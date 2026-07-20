@@ -1,0 +1,73 @@
+@import 'tailwindcss';
+
+/* Self-hosted — no external font request, no third-party tracking.
+   Poppins ships latin-only files: Spanish needs nothing outside U+00A0–00FF
+   (á é í ó ú ñ ü ¿ ¡), so the other subsets are dead weight in the bundle.
+   Inter Variable has no latin-only entrypoint — `wght.css` is the weight axis
+   without the optical-size variants. Its remaining subsets are unicode-range
+   gated, so browsers never actually fetch them. */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource/poppins/latin-600.css';
+@import '@fontsource/poppins/latin-700.css';
+@import '@fontsource/poppins/latin-800.css';
+
+/**
+ * Brand tokens sampled directly from the client's logo artwork
+ * (_source/graphics), not eyeballed:
+ *   green  rgb(68,183,90)  — dominant across two independent images
+ *   ink    rgb(33,31,32)
+ */
+@theme {
+  --color-brand: #44b75a;
+  --color-brand-dark: #2f8f44;
+  --color-brand-deep: #1f6b31;
+  --color-brand-light: #eaf7ee;
+
+  --color-ink: #211f20;
+  --color-ink-soft: #55514f;
+  --color-ink-mute: #8a8583;
+
+  --color-paper: #fbfbf9;
+
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Visible keyboard focus — the default outline disappears against the dark sections. */
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}

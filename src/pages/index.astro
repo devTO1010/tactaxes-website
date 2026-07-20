@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Landing from '../components/Landing.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+
+const lang = 'es' as const;
+---
+
+<Base lang={lang}>
+  <Header lang={lang} />
+  <Landing lang={lang} />
+  <Footer lang={lang} />
+  <MobileBar lang={lang} />
+</Base>

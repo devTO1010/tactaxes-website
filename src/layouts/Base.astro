@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import { site, type Locale } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+import { href, localeHref } from '../lib/url';
+
+interface Props {
+  lang: Locale;
+  /** Path without locale prefix or base, e.g. '' for home, 'servicios/' for a section. */
+  path?: string;
+}
+
+const { lang, path = '' } = Astro.props;
+const t = useTranslations(lang);
+
+const canonical = new URL(localeHref(path, lang), Astro.site).toString();
+const altEs = new URL(localeHref(path, 'es'), Astro.site).toString();
+const altEn = new URL(localeHref(path, 'en'), Astro.site).toString();
+
+const { street, unit, city, region, postalCode, country } = site.address;
+
+/**
+ * LocalBusiness structured data.
+ *
+ * Deliberately omitted until the client confirms them:
+ *  - openingHoursSpecification — the door-decal times are unreadable in the source
+ *    photos. Publishing guessed hours would send people to a closed office.
+ *  - aggregateRating / review — no verified reviews exist yet. Fabricated ratings
+ *    are both dishonest and a Google structured-data penalty.
+ *  - geo — no verified coordinates.
+ */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AccountingService',
+  name: site.name,
+  description: t('meta.description'),
+  url: new URL(href('/'), Astro.site).toString(),
+  telephone: site.phone,
+  image: new URL(href('/images/storefront.jpg'), Astro.site).toString(),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${street}, ${unit}`,
+    addressLocality: city,
+    addressRegion: region,
+    postalCode,
+    addressCountry: country,
+  },
+  areaServed: { '@type': 'City', name: 'Louisville' },
+  availableLanguage: ['es', 'en'],
+};
+---
+
+<!doctype html>
+<html lang={lang === 'es' ? 'es-US' : 'en-US'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t('meta.title')}</title>
+    <meta name="description" content={t('meta.description')} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es-US" href={altEs} />
+    <link rel="alternate" hreflang="en-US" href={altEn} />
+    <link rel="alternate" hreflang="x-default" href={altEs} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={t('meta.title')} />
+    <meta property="og:description" content={t('meta.description')} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_US' : 'en_US'} />
+    <meta property="og:image" content={new URL(href('/images/storefront.jpg'), Astro.site).toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#44B75A" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:font-display focus:font-semibold focus:text-white"
+    >
+      {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+    </a>
+    <slot />
+  </body>
+</html>

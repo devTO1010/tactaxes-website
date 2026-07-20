@@ -1,0 +1,58 @@
+---
+import { site, type Locale } from '../data/site';
+import { useTranslations } from '../i18n/ui';
+import { localeHref, otherLocale } from '../lib/url';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+
+interface Props {
+  lang: Locale;
+  path?: string;
+}
+
+const { lang, path = '' } = Astro.props;
+const t = useTranslations(lang);
+const other = otherLocale(lang);
+
+const nav = [
+  { href: '#personas', key: 'nav.individuals' },
+  { href: '#negocios', key: 'nav.businesses' },
+  { href: '#servicios', key: 'nav.services' },
+  { href: '#confianza', key: 'nav.why' },
+  { href: '#visitanos', key: 'nav.visit' },
+] as const;
+---
+
+<header class="sticky top-0 z-40 border-b border-ink/10 bg-white/95 backdrop-blur">
+  <div class="container-page flex h-[72px] items-center gap-6">
+    <a href={localeHref('', lang)} class="flex shrink-0 items-center gap-2">
+      <Logo size={34} />
+      <span class="font-display text-[21px] leading-none font-extrabold">
+        <span class="text-brand">TAC</span><span class="font-semibold text-ink"> Taxes</span>
+      </span>
+    </a>
+
+    <nav class="ml-4 hidden items-center gap-7 text-[15px] font-medium text-ink-soft lg:flex" aria-label={t('nav.services')}>
+      {nav.map((item) => <a href={item.href} class="transition hover:text-brand-dark">{t(item.key)}</a>)}
+    </nav>
+
+    <div class="ml-auto flex items-center gap-3">
+      <a
+        href={localeHref(path, other)}
+        hreflang={other === 'es' ? 'es-US' : 'en-US'}
+        class="rounded-full border border-ink/20 px-3 py-1.5 text-[13px] font-semibold transition hover:border-brand hover:text-brand-dark"
+      >
+        {other === 'en' ? 'EN' : 'ES'}
+        <span class="sr-only">— {t('nav.langLabel')}</span>
+      </a>
+
+      <a
+        href={site.phoneHref}
+        class="hidden items-center gap-2 rounded-full bg-brand px-5 py-2.5 font-display text-[15px] font-semibold text-white transition hover:bg-brand-dark sm:inline-flex"
+      >
+        <Icon name="phone" size={16} solid />
+        {site.phone}
+      </a>
+    </div>
+  </div>
+</header>

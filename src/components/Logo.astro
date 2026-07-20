@@ -1,0 +1,24 @@
+---
+interface Props {
+  size?: number;
+  /** Dark backgrounds need a white checkbox outline. */
+  onDark?: boolean;
+  class?: string;
+}
+
+const { size = 34, onDark = false, class: className = '' } = Astro.props;
+const boxStroke = onDark ? '#ffffff' : '#211F20';
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 40 40"
+  fill="none"
+  class={className}
+  role="img"
+  aria-label="TAC Taxes"
+>
+  <path d="M7 9.5 30 6.5l2.5 25L9.5 34.5z" stroke={boxStroke} stroke-width="2.6" stroke-linejoin="round" />
+  <path d="M13 20.5l6.5 6.5L36 5" stroke="#44B75A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
