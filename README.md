@@ -134,5 +134,5 @@ no qualifier — disambiguated by position and **needs client confirmation**. A
 `DIGITAL MARKETING` family header exists with zero services and is omitted.
 
 Contact details were reconciled across 16 marketing graphics that disagreed with
-each other: phone `(502) 964-5000` (one graphic showed 764), ZIP `40219`
-(one showed 49219, a Michigan prefix).
+each other: ZIP `40219` (one showed 49219, a Michigan prefix). The graphics show phone
+`(502) 964-5000`; the live number is now `(502) 237-8222` per the client (2026-10-22).

@@ -32,12 +32,12 @@ export const site = {
   legalName: 'TAC Taxes',
   tagline: 'Simple · Accurate · Service',
 
-  /** Two graphics disagreed: one showed 764-5000, fifteen showed 964-5000. Door signage confirms 964. */
-  phone: '(502) 964-5000',
-  phoneHref: 'tel:+15029645000',
+  /** Supplied by client 2026-10-22; replaces (502) 964-5000 shown on the marketing graphics. */
+  phone: '(502) 237-8222',
+  phoneHref: 'tel:+15022378222',
 
   /** UNCONFIRMED: assumed same as the main line. WhatsApp appears on 4 of 16 graphics. */
-  whatsapp: 'https://wa.me/15029645000',
+  whatsapp: 'https://wa.me/15022378222',
 
   address: {
     street: '5751 Preston Hwy',

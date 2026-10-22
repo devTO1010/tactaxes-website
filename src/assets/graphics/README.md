@@ -17,9 +17,10 @@ Web-ready derivatives already cropped from these live in `public/images/`.
 Every graphic has marketing copy baked into the image — headlines, phone numbers,
 social icons. They can't be used as-is for web imagery. `public/images/storefront.jpg`
 and `office-cards.jpg` were cropped out of `682739203…` and `682389048…` respectively
-to isolate the usable photography.
+to isolate the usable photography (`office-cards.jpg` also has the old phone banner
+cropped off its top edge).
 
-Note the baked-in text is unreliable: it contains the phone and ZIP typos documented
+Note the baked-in text is unreliable: it contains the old phone number and the ZIP typo documented
 in the root README, and one graphic is stamped "TacTaxes 2023". Treat
 `src/data/site.ts` as the source of truth for any fact, not these images.
 
